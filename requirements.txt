@@ -1,0 +1,4 @@
+aiochclient
+aiohttp
+bs4
+html5lib
