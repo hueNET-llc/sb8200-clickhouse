@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 from traceback import print_exc
 from time import perf_counter
 
+
+# Modem login info
 MODEM_NAME = os.environ.get('MODEM_NAME', 'SB8200')
 # Please note older firmwares use plain HTTP
 MODEM_URL = os.environ.get('MODEM_URL', 'https://192.168.100.1')
@@ -21,14 +23,29 @@ if (MODEM_USER := os.environ.get('MODEM_USER')):
 
 UPTIME_REGEX = re.compile(r'(?:([0-9][0-9]?) days )?(?:([0-9][0-9]?)h\:)?(?:([0-9][0-9]?)m\:)?(?:([0-9][0-9]?)s\.00)?')
 
-# How long to wait in between scrapes
-# I recommend >=10 seconds so the webserver doesn't crash
+# Scraping settings
 SCRAPE_DELAY = int(os.environ.get('SCRAPE_DELAY', 10))
 
+# ClickHouse login info
 CLICKHOUSE_URL = os.environ['CLICKHOUSE_URL']
 CLICKHOUSE_USER = os.environ['CLICKHOUSE_USER']
 CLICKHOUSE_PASS = os.environ['CLICKHOUSE_PASS']
 CLICKHOUSE_DB = os.environ['CLICKHOUSE_DB']
+
+# ClickHouse table names
+DOWNSTREAM_TABLE = os.environ.get(
+    'DOWNSTREAM_TABLE',
+    'docsis_downstream'
+)
+UPSTREAM_TABLE = os.environ.get(
+    'UPSTREAM_TABLE',
+    'docsis_upstream'
+)
+STATUS_TABLE = os.environ.get(
+    'STATUS_TABLE',
+    'docsis_status'
+)
+
 
 class Exporter:
     async def start(self):
@@ -123,12 +140,12 @@ class Exporter:
 
                 # Insert downstream data into Clickhouse
                 await self.clickhouse.execute(
-                    "INSERT INTO docsis_downstream_buffer (device, channel_id, frequency, modulation, power, snr, correcteds, uncorrecteds, time) VALUES",
+                    f"INSERT INTO {DOWNSTREAM_TABLE} (device, channel_id, frequency, modulation, power, snr, correcteds, uncorrecteds, time) VALUES",
                     *downstream
                 )
                 # Insert upstream data into Clickhouse
                 await self.clickhouse.execute(
-                    "INSERT INTO docsis_upstream_buffer (device, channel_id, frequency, modulation, power, width, time) VALUES",
+                    f"INSERT INTO {UPSTREAM_TABLE} (device, channel_id, frequency, modulation, power, width, time) VALUES",
                     *upstream
                 )
 
@@ -157,7 +174,7 @@ class Exporter:
                 latency = perf_counter() - start
                 # Insert modem status into Clickhouse
                 await self.clickhouse.execute(
-                    "INSERT INTO docsis_status_buffer (device, config_filename, uptime, version, model, scrape_latency, time) VALUES",
+                    F"INSERT INTO {STATUS_TABLE} (device, config_filename, uptime, version, model, scrape_latency, time) VALUES",
                     (
                         MODEM_NAME,                                 # Passed modem name or SB8200
                         config_filename,                            # The loaded configuration filename

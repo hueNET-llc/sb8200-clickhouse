@@ -1,5 +1,5 @@
 -- PLEASE NOTE
--- These buffer tables are what I personally use to do batch inserts
+-- The buffer tables are what I personally use to do buffer and batch inserts
 -- You may have to modify them to work in your setup
 
 CREATE TABLE docsis_downstream (
