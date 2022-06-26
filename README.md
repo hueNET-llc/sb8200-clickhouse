@@ -1,4 +1,7 @@
 # sb8200-clickhouse #
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/hueNET-llc/sb8200-clickhouse/Master%20-%20Build%20and%20push%20to%20Docker%20Hub?style=flat-square)](https://github.com/hueNET-llc/sb8200-clickhouse/actions/workflows/master.yml)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/rafaelwastaken/sb8200-clickhouse)](https://hub.docker.com/r/rafaelwastaken/sb8200-clickhouse)
+
 An SB8200 exporter for ClickHouse
 
 `⚠️ WARNING: Setting the scrape delay to <10 seconds may crash the webserver on older firmwares.`
