@@ -34,15 +34,15 @@ CLICKHOUSE_DB = os.environ['CLICKHOUSE_DB']
 
 # ClickHouse table names
 DOWNSTREAM_TABLE = os.environ.get(
-    'DOWNSTREAM_TABLE',
+    'CLICKHOUSE_DOWNSTREAM_TABLE',
     'docsis_downstream'
 )
 UPSTREAM_TABLE = os.environ.get(
-    'UPSTREAM_TABLE',
+    'CLICKHOUSE_UPSTREAM_TABLE',
     'docsis_upstream'
 )
 STATUS_TABLE = os.environ.get(
-    'STATUS_TABLE',
+    'CLICKHOUSE_STATUS_TABLE',
     'docsis_status'
 )
 
